@@ -6,6 +6,7 @@
   <title>Spotify Authorization</title>
 </head>
 <body>
+<button id="loginButton">Login with Spotify</button>
 
 <script>
   const generateRandomString = (length) => {
@@ -105,13 +106,9 @@ var redirectUri = 'https://17seba17.github.io/spotify/';
     handleAuthorizationResponse();
   };
 
-const loginButton = document.createElement('button');
-  loginButton.textContent = 'Login with Spotify';
-  loginButton.addEventListener('click', () => {
+document.getElementById('loginButton').addEventListener('click', () => {
     window.location.href = authUrl.toString();
   });
-
-  document.body.appendChild(loginButton);
   
 </script>
 
