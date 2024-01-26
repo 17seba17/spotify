@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Authorization</title>
+    <title>Spotify Authorization 12:56</title>
 </head>
 <body>
 
@@ -21,10 +21,10 @@
         }
 
         function initiateAuthorization() {
-            var client_id = '53314da027904a1fbd04c75ade00fa06'; // Modificato con il tuo ID cliente Spotify
+            var client_id = '53314da027904a1fbd04c75ade00fa06';
             var redirect_uri = 'https://17seba17.github.io/spotify/';
             var state = generateRandomString(16);
-            var scope = 'user-read-private user-read-email user-read-currently-playing'; // Aggiunto lo scope per leggere la canzone in riproduzione
+            var scope = 'user-read-private user-read-email user-read-currently-playing';
 
             var authorizationUrl = 'https://accounts.spotify.com/authorize?' +
                 'response_type=code' +
@@ -33,12 +33,10 @@
                 '&redirect_uri=' + encodeURIComponent(redirect_uri) +
                 '&state=' + state;
 
-            // Reindirizzamento all'URL di autorizzazione
             window.location.href = authorizationUrl;
         }
 
         function getCurrentSongInfo(accessToken) {
-            // Chiamata API per ottenere le informazioni sulla canzone in riproduzione
             fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                 headers: {
                     'Authorization': 'Bearer ' + accessToken
@@ -46,14 +44,18 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Visualizza le informazioni sulla canzone attualmente in riproduzione
-                console.log(data);
                 alert('Hai fatto l\'accesso con Spotify. Informazioni sulla canzone: ' + data.item.name);
             })
             .catch(error => console.error('Errore durante la richiesta delle informazioni sulla canzone:', error));
         }
 
-        // Funzione per ottenere i parametri dalla stringa URL
+        function handleAuthorizationCode() {
+            var authorizationCode = getParameterByName('code');
+            if (authorizationCode) {
+                getCurrentSongInfo(authorizationCode);
+            }
+        }
+
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
@@ -64,12 +66,9 @@
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 
-        // Controlla se c'è un codice nella query string
-        var authorizationCode = getParameterByName('code');
-        if (authorizationCode) {
-            // Esegui la chiamata API per ottenere le informazioni sulla canzone in riproduzione
-            getCurrentSongInfo(authorizationCode);
-        }
+        // Chiamata quando la pagina viene caricata
+        window.onload = handleAuthorizationCode;
+
     </script>
 
     <button onclick="initiateAuthorization()">Authorize with Spotify</button>
