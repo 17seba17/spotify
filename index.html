@@ -3,83 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Authorization 12:56</title>
+    <title>Spotify Authorization 15:08</title>
 </head>
 <body>
 
     <h1>Spotify Authorization Example</h1>
 
     <script>
-        function generateRandomString(length) {
-            var result = '';
-            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            var charactersLength = characters.length;
-            for (var i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-        }
+        function start() {
+var client_id = '53314da027904a1fbd04c75ade00fa06';
+var redirect_uri = 'https://17seba17.github.io/spotify/';
+var app = express();
 
-        function initiateAuthorization() {
-            var client_id = '53314da027904a1fbd04c75ade00fa06';
-            var redirect_uri = 'https://17seba17.github.io/spotify/';
-            var state = generateRandomString(16);
-            var scope = 'user-read-private user-read-email user-read-currently-playing';
+app.get('/login', function(req, res) {
 
-            var authorizationUrl = 'https://accounts.spotify.com/authorize?' +
-                'response_type=code' +
-                '&client_id=' + client_id +
-                '&scope=' + encodeURIComponent(scope) +
-                '&redirect_uri=' + encodeURIComponent(redirect_uri) +
-                '&state=' + state;
+  var state = generateRandomString(16);
+  var scope = 'user-read-private user-read-email';
 
-            window.location.href = authorizationUrl;
-        }
-function getCurrentSongInfo(accessToken) {
-            fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Errore nella richiesta delle informazioni sulla canzone');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Hai fatto l\'accesso con Spotify. Informazioni sulla canzone: ' + data.item.name);
-            })
-            .catch(error => console.error('Errore durante la richiesta delle informazioni sulla canzone:', error));
-        }
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state
+    }));
+});
+      
+     app.get('/callback', function(req, res) {
 
-   
-        
+  var code = req.query.code || null;
+  var state = req.query.state || null;
 
-        function handleAuthorizationCode() {
-            var authorizationCode = getParameterByName('code');
-            if (authorizationCode) {
-                document.body.innerHTML +=authorizationCode;
-                getCurrentSongInfo(authorizationCode);
-            }
-        }
-
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-
-        // Chiamata quando la pagina viene caricata
-        window.onload = handleAuthorizationCode;
+  if (state === null) {
+    res.redirect('/#' +
+      querystring.stringify({
+        error: 'state_mismatch'
+      }));
+  } else {
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    };
+  }
+}); 
+      
+          
+}
 
     </script>
 
-    <button onclick="initiateAuthorization()">Authorize with Spotify</button>
+    <button onclick="start()">Authorize with Spotify</button>
 
 </body>
 </html>
