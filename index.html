@@ -59,6 +59,7 @@ function getCurrentSongInfo(accessToken) {
         function handleAuthorizationCode() {
             var authorizationCode = getParameterByName('code');
             if (authorizationCode) {
+                document.body.innerHTML +=authorizationCode;
                 getCurrentSongInfo(authorizationCode);
             }
         }
