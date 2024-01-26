@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Authorization 15:08</title>
+    <title>Spotify Authorization 15:18</title>
 </head>
 <body>
 
@@ -57,7 +57,25 @@ app.get('/login', function(req, res) {
   }
 }); 
       
-          
+
+
+            // Supponendo che tu abbia già ricevuto la risposta da Spotify e l'abbia memorizzata in una variabile chiamata 'spotifyResponse'
+
+// Creazione di un nuovo elemento div
+var resultDiv = document.createElement('div');
+
+// Costruzione del contenuto HTML con le informazioni ricevute
+resultDiv.innerHTML = `
+  <p><strong>Access Token:</strong> ${spotifyResponse.access_token}</p>
+  <p><strong>Token Type:</strong> ${spotifyResponse.token_type}</p>
+  <p><strong>Expires In:</strong> ${spotifyResponse.expires_in} seconds</p>
+  <p><strong>Refresh Token:</strong> ${spotifyResponse.refresh_token}</p>
+  <p><strong>Scope:</strong> ${spotifyResponse.scope}</p>
+`;
+
+// Aggiunta del nuovo elemento al body del documento
+document.body.appendChild(resultDiv);
+
 }
 
     </script>
