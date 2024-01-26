@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Authorization 15:08</title>
+    <title>Spotify Authorization 15:42</title>
 </head>
 <body>
 
     <h1>Spotify Authorization Example</h1>
 
     <script>
+const generateRandomString = (length) => {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const values = crypto.getRandomValues(new Uint8Array(length));
+  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+}
+
+const codeVerifier  = generateRandomString(64);
+        
         function start() {
 var client_id = '53314da027904a1fbd04c75ade00fa06';
 var redirect_uri = 'https://17seba17.github.io/spotify/';
