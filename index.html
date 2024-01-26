@@ -104,6 +104,15 @@ var redirectUri = 'https://17seba17.github.io/spotify/';
   window.onload = () => {
     handleAuthorizationResponse();
   };
+
+const loginButton = document.createElement('button');
+  loginButton.textContent = 'Login with Spotify';
+  loginButton.addEventListener('click', () => {
+    window.location.href = authUrl.toString();
+  });
+
+  document.body.appendChild(loginButton);
+  
 </script>
 
 </body>
