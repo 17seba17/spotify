@@ -3,11 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Spotify Authorization</title>
 </head>
 <body>
 
-    <h1>Hello, World!</h1>
+    <h1>Spotify Authorization Example</h1>
+
+    <script>
+        // Funzione per generare una stringa casuale di lunghezza specificata
+        function generateRandomString(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        // Funzione per avviare la richiesta di autorizzazione
+        function initiateAuthorization() {
+            var client_id = '53314da027904a1fbd04c75ade00fa06';
+            var redirect_uri = 'http://localhost:8888/callback';
+            var state = generateRandomString(16);
+            var scope = 'user-read-private user-read-email';
+
+            var authorizationUrl = 'https://accounts.spotify.com/authorize?' +
+                'response_type=code' +
+                '&client_id=' + client_id +
+                '&scope=' + encodeURIComponent(scope) +
+                '&redirect_uri=' + encodeURIComponent(redirect_uri) +
+                '&state=' + state;
+
+            // Reindirizzamento all'URL di autorizzazione
+            window.location.href = authorizationUrl;
+        }
+    </script>
+
+    <button onclick="initiateAuthorization()">Authorize with Spotify</button>
 
 </body>
 </html>
