@@ -24,7 +24,7 @@
             var client_id = '53314da027904a1fbd04c75ade00fa06'; // Modificato con il tuo ID cliente Spotify
             var redirect_uri = 'https://17seba17.github.io/spotify/';
             var state = generateRandomString(16);
-            var scope = 'user-read-private user-read-email';
+            var scope = 'user-read-private user-read-email user-read-currently-playing'; // Aggiunto lo scope per leggere la canzone in riproduzione
 
             var authorizationUrl = 'https://accounts.spotify.com/authorize?' +
                 'response_type=code' +
@@ -35,6 +35,22 @@
 
             // Reindirizzamento all'URL di autorizzazione
             window.location.href = authorizationUrl;
+        }
+
+        function getCurrentSongInfo(accessToken) {
+            // Chiamata API per ottenere le informazioni sulla canzone in riproduzione
+            fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Visualizza le informazioni sulla canzone attualmente in riproduzione
+                console.log(data);
+                alert('Hai fatto l\'accesso con Spotify. Informazioni sulla canzone: ' + data.item.name);
+            })
+            .catch(error => console.error('Errore durante la richiesta delle informazioni sulla canzone:', error));
         }
 
         // Funzione per ottenere i parametri dalla stringa URL
@@ -51,8 +67,8 @@
         // Controlla se c'è un codice nella query string
         var authorizationCode = getParameterByName('code');
         if (authorizationCode) {
-            // Visualizza un messaggio di accesso riuscito
-            document.body.innerHTML += '<p>Hai fatto l\'accesso con Spotify</p>';
+            // Esegui la chiamata API per ottenere le informazioni sulla canzone in riproduzione
+            getCurrentSongInfo(authorizationCode);
         }
     </script>
 
