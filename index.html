@@ -10,115 +10,49 @@
     <h1>Spotify Authorization Example</h1>
 
     <script>
-        // Function to generate a random string
-        const generateRandomString = (length) => {
-            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            const values = crypto.getRandomValues(new Uint8Array(length));
-            return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+        function generateRandomString(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
         }
 
-        // Function to hash using SHA256 algorithm
-        const sha256 = async (plain) => {
-            const encoder = new TextEncoder()
-            const data = encoder.encode(plain)
-            return window.crypto.subtle.digest('SHA-256', data)
+        function initiateAuthorization() {
+            var client_id = '53314da027904a1fbd04c75ade00fa06'; // Modificato con il tuo ID cliente Spotify
+            var redirect_uri = 'https://17seba17.github.io/spotify/';
+            var state = generateRandomString(16);
+            var scope = 'user-read-private user-read-email';
+
+            var authorizationUrl = 'https://accounts.spotify.com/authorize?' +
+                'response_type=code' +
+                '&client_id=' + client_id +
+                '&scope=' + encodeURIComponent(scope) +
+                '&redirect_uri=' + encodeURIComponent(redirect_uri) +
+                '&state=' + state;
+
+            // Reindirizzamento all'URL di autorizzazione
+            window.location.href = authorizationUrl;
         }
 
-        // Function to base64 encode
-        const base64encode = (input) => {
-            return btoa(String.fromCharCode(...new Uint8Array(input)))
-                .replace(/=/g, '')
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_');
-        }
-
-        // Function to get URL parameters
-        const getParameterByName = (name, url) => {
+        // Funzione per ottenere i parametri dalla stringa URL
+        function getParameterByName(name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
-            const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
                 results = regex.exec(url);
             if (!results) return null;
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 
-        // Function to initiate authorization
-        const initiateAuthorization = () => {
-            const clientId = 'YOUR_CLIENT_ID';
-            const redirectUri = 'http://localhost:8080';
-
-            // Generate code verifier
-            const codeVerifier = generateRandomString(64);
-
-            // Save code verifier in local storage
-            window.localStorage.setItem('code_verifier', codeVerifier);
-
-            // Generate code challenge
-            sha256(codeVerifier)
-                .then(hashed => base64encode(hashed))
-                .then(codeChallenge => {
-                    const authUrl = new URL("https://accounts.spotify.com/authorize");
-                    const scope = 'user-read-private user-read-email';
-
-                    // Append parameters to authorization URL
-                    const params =  {
-                        response_type: 'code',
-                        client_id: clientId,
-                        scope,
-                        code_challenge_method: 'S256',
-                        code_challenge,
-                        redirect_uri: redirectUri,
-                    }
-
-                    authUrl.search = new URLSearchParams(params).toString();
-
-                    // Redirect to Spotify authorization page
-                    window.location.href = authUrl.toString();
-                });
-        }
-
-        // Check if there's a code in the query string
-        const authorizationCode = getParameterByName('code');
-
+        // Controlla se c'è un codice nella query string
+        var authorizationCode = getParameterByName('code');
         if (authorizationCode) {
-            // Display a message for successful authorization
+            // Visualizza un messaggio di accesso riuscito
             document.body.innerHTML += '<p>Hai fatto l\'accesso con Spotify</p>';
-
-            // Continue with token exchange (if needed)
-            const clientId = '53314da027904a1fbd04c75ade00fa06';
-            const redirectUri = 'http://localhost:8888/callback';
-
-            // Get stored code verifier
-            const codeVerifier = window.localStorage.getItem('code_verifier');
-
-            // Token exchange payload
-            const payload = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    client_id: clientId,
-                    grant_type: 'authorization_code',
-                    code: authorizationCode,
-                    redirect_uri: redirectUri,
-                    code_verifier: codeVerifier,
-                }),
-            }
-
-            // Token exchange URL
-            const tokenUrl = 'https://accounts.spotify.com/api/token';
-
-            // Perform the token exchange
-            fetch(tokenUrl, payload)
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the token response as needed
-                    window.localStorage.setItem('access_token', data.access_token);
-                    console.log('Access Token:', data.access_token);
-                })
-                .catch(error => console.error('Error fetching token:', error));
         }
     </script>
 
