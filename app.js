@@ -138,6 +138,30 @@ async function getUserData() {
   return await response.json();
 }
 
+async function createPlaylist() {
+  const elementWithId = document.querySelector('[data-bind="id"]');
+  const user_id = elementWithId.textContent; // O anche innerHTML a seconda delle tue esigenze
+
+  
+  const playlistData = {
+    name: 'New Playlist',
+    description: 'New playlist description',
+    public: false
+  };
+
+  const response = await fetch(`https://api.spotify.com/v1/users/${user_id}/playlists`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + currentToken.access_token
+    },
+    body: JSON.stringify(playlistData)
+  });
+
+  return await response.json();
+}
+
+
 // Click handlers
 async function loginWithSpotifyClick() {
   await redirectToSpotifyAuthorize();
