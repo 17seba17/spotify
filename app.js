@@ -53,7 +53,9 @@ if (code) {
 // If we have a token, we're logged in, so fetch user data and render logged in template
 if (currentToken.access_token) {
   const userData = await getUserData();
+  const songData = await getCurrentSong();
   renderTemplate("main", "logged-in-template", userData);
+  renderTemplate("main", "logged-in-template", songData);
   renderTemplate("oauth", "oauth-template", currentToken);
 }
 
@@ -130,7 +132,6 @@ async function refreshToken() {
 }
 
 async function getUserData() {
-    console.log("Sono mega pro!!");
   const response = await fetch("https://api.spotify.com/v1/me", {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
@@ -139,34 +140,14 @@ async function getUserData() {
   return await response.json();
 }
 
-async function Pause() {
+async function getCurrentSong() {
 
-  console.log("ciaooooooo!!");
-try {
-    const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P%2C4VqPOruhp5EdPBeR92t6lQ%2C2takcwOaAZWiXQijPHIx7B", {
-        method: 'PUT',
-        headers: {
-            'Authorization': 'Bearer ' + currentToken.access_token,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            ids: ["7ouMYWpwJ422jRcDASZB7P"]
-        }),
-    });
+const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
+  });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
-
-    return jsonResponse;
-} catch (error) {
-    console.error('Error:', error.message);
-    // Gestisci l'errore come preferisci
-}
-
+  return await response.json();
   
 }
 
