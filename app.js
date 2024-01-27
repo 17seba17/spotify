@@ -130,6 +130,7 @@ async function refreshToken() {
 }
 
 async function getUserData() {
+    console.log("Sono mega pro!!");
   const response = await fetch("https://api.spotify.com/v1/me", {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
@@ -139,6 +140,8 @@ async function getUserData() {
 }
 
 async function Pause() {
+
+  console.log("ciaooooooo!!");
 if (currentToken.access_token) {
 const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P", {
     method: 'PUT',
@@ -152,6 +155,10 @@ const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ
 });
 
 }
+
+const jsonResponse = await response.json();
+console.log(jsonResponse);
+  
 }
 
 
