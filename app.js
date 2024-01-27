@@ -55,7 +55,7 @@ if (currentToken.access_token) {
   const userData = await getUserData();
   const songData = await getCurrentSong();
   renderTemplate("main", "logged-in-template", userData);
-  renderTemplate("main", "logged-in-template", songData);
+  //renderTemplate("main", "logged-in-template", songData);
   renderTemplate("oauth", "oauth-template", currentToken);
 }
 
@@ -170,32 +170,5 @@ async function refreshTokenClick() {
 
 // HTML Template Rendering with basic data binding - demoware only.
 function renderTemplate(targetId, templateId, data = null) {
-  const template = document.getElementById(templateId);
-  const clone = template.content.cloneNode(true);
-
-  const elements = clone.querySelectorAll("*");
-  elements.forEach(ele => {
-    const bindingAttrs = [...ele.attributes].filter(a => a.name.startsWith("data-bind"));
-
-    bindingAttrs.forEach(attr => {
-      const target = attr.name.replace(/data-bind-/, "").replace(/data-bind/, "");
-      const targetType = target.startsWith("onclick") ? "HANDLER" : "PROPERTY";
-      const targetProp = target === "" ? "innerHTML" : target;
-
-      const prefix = targetType === "PROPERTY" ? "data." : "";
-      const expression = prefix + attr.value.replace(/;\n\r\n/g, "");
-
-      // Maybe use a framework with more validation here ;)
-      try {
-        ele[targetProp] = targetType === "PROPERTY" ? eval(expression) : () => { eval(expression) };
-        ele.removeAttribute(attr.name);
-      } catch (ex) {
-        console.error(`Error binding ${expression} to ${targetProp}`, ex);
-      }
-    });
-  });
-
-  const target = document.getElementById(targetId);
-  target.innerHTML = "";
-  target.appendChild(clone);
+ 
 }
