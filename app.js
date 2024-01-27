@@ -138,8 +138,15 @@ async function getUserData() {
   return await response.json();
 }
 
-async function createPlaylist() {
+async function Pause() {
+if (currentToken.access_token) {
+  const response = await fetch("https://api.spotify.com/v1/me/player/pause", {
+    method: 'PUT',
+    headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
+  });
 
+  return await response.json();
+}
 }
 
 
