@@ -142,22 +142,31 @@ async function getUserData() {
 async function Pause() {
 
   console.log("ciaooooooo!!");
-if (currentToken.access_token) {
-const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P", {
-    method: 'PUT',
-    headers: {
-        'Authorization': 'Bearer ' + currentToken.access_token,
-        'Content-Type': 'application/json', // correggi questa riga
-    },
-    body: JSON.stringify({
-        ids: ["6bzsEnLMmWRKv0POOzwJ0A"] // Assicurati di passare un array di stringhe valido
-    }),
-});
+try {
+    const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P%2C4VqPOruhp5EdPBeR92t6lQ%2C2takcwOaAZWiXQijPHIx7B", {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + currentToken.access_token,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ids: ["7ouMYWpwJ422jRcDASZB7P"]
+        }),
+    });
 
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+
+    return jsonResponse;
+} catch (error) {
+    console.error('Error:', error.message);
+    // Gestisci l'errore come preferisci
 }
 
-const jsonResponse = await response.json();
-console.log(jsonResponse);
   
 }
 
