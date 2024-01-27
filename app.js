@@ -140,7 +140,7 @@ async function getUserData() {
 
 async function Pause() {
 if (currentToken.access_token) {
-const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P%2C4VqPOruhp5EdPBeR92t6lQ%2C2takcwOaAZWiXQijPHIx7B", {
+const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P", {
     method: 'PUT',
     headers: {
         'Authorization': 'Bearer ' + currentToken.access_token,
