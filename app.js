@@ -140,12 +140,17 @@ async function getUserData() {
 
 async function Pause() {
 if (currentToken.access_token) {
-  const response = await fetch("https://api.spotify.com/v1/me/player/pause", {
+const response = await fetch("https://api.spotify.com/v1/me/tracks?ids=7ouMYWpwJ422jRcDASZB7P%2C4VqPOruhp5EdPBeR92t6lQ%2C2takcwOaAZWiXQijPHIx7B", {
     method: 'PUT',
-    headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
-  });
+    headers: {
+        'Authorization': 'Bearer ' + currentToken.access_token,
+        'Content-Type': 'application/json', // correggi questa riga
+    },
+    body: JSON.stringify({
+        ids: ["6bzsEnLMmWRKv0POOzwJ0A"] // Assicurati di passare un array di stringhe valido
+    }),
+});
 
-  return await response.json();
 }
 }
 
